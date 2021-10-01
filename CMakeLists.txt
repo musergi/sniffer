@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.15)
+project(sniffer)
+find_library(pcap REQUIRED)
+add_executable(sniffer main.c)
+target_link_libraries(sniffer PUBLIC pcap)
