@@ -1,9 +1,11 @@
-#ifndef STACK_H
-#define STACK_H
+#ifndef PROTOCOLS_ETHERNET_H
+#define PROTOCOLS_ETHERNET_H
 
 #include <pcap.h>
 
-typedef unsigned int byte;
+#define ETHERTYPE_IPV4 0x0800
+#define ETHERTYPE_ARP 0x0806
+#define ETHERTYPE_IPV6 0x86DD
 
 /**
  * @brief Size in bytes of an ethernet address
@@ -13,10 +15,11 @@ typedef unsigned int byte;
 /**
  * @brief Struct holding the header data for Ethernet.
  */
-typedef struct ethernet_header {
-    byte destination_address[ETHERNET_ADDRESS_SIZE];
-    byte source_address[ETHERNET_ADDRESS_SIZE];
-    byte ethertype[2];
+typedef struct ethernet_header
+{
+    u_char destination_address[ETHERNET_ADDRESS_SIZE];
+    u_char source_address[ETHERNET_ADDRESS_SIZE];
+    u_char ethertype[2];
 } ethernet_header_t;
 
 /**
@@ -27,7 +30,7 @@ typedef struct ethernet_header {
  * @return ethernet_header_t* Pointer to the part of the bytes representing the
  * ethernet header.
  */
-ethernet_header_t *ethernet_get_header(byte *data);
+const ethernet_header_t *ethernet_get_header(const u_char *data);
 
 /**
  * @brief Receives a pointer to raw data and offsets the pointer to point to the
@@ -36,7 +39,7 @@ ethernet_header_t *ethernet_get_header(byte *data);
  * @param data Byte pointer to the bytes on the wire.
  * @return byte* Byte pointer to the first byte of ethernet data.
  */
-byte *ethernet_get_data(byte *data);
+const u_char *ethernet_get_data(const u_char *data);
 
 /**
  * @brief Converts an Ethernet address into a human readable format (e.g
@@ -48,7 +51,7 @@ byte *ethernet_get_data(byte *data);
  * @param address Bytes representing the address, ETHERNET_ADDRESS_SIZE will be
  * assumed, be careful with bound overflow.
  */
-void ethernet_address_str(char *str, size_t size, byte *address);
+void ethernet_address_str(char *str, size_t size, const u_char *address);
 
 /**
  * @brief Converts an Ethertype into a human readable protocol. If the ethertype
@@ -60,6 +63,6 @@ void ethernet_address_str(char *str, size_t size, byte *address);
  * @param ethertype Bytes representing the ethertype, the first being the upper
  * byte and the second the lower byte.
  */
-void ethernet_ethertype_str(char *str, size_t size, byte *ethertype);
+void ethernet_ethertype_str(char *str, size_t size, const u_char *ethertype);
 
 #endif
